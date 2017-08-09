@@ -10,6 +10,12 @@ defmodule Slate.Entities.Contact do
     timestamps()
   end
 
+  @required_fields [:surnames, :given_names]
+
   @doc false
-  def changeset(
+  def changeset(%Contact{} = contact, attrs) do
+    contact
+    |> cast(attrs, @required_fields)
+    |> validate_required(@required_fields)
+  end
 end
