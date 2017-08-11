@@ -18,7 +18,7 @@ defmodule Slate.Migration do
 
       Runner.start_command({:create, Ecto.Migration.__prefix__(table)})
 
-      add(:id, :binary_id, primary_key: true)
+      add(:id, :binary_id, primary_key: true, comment: "PK")
       unquote(block)
 
       Runner.end_command

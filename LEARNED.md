@@ -114,3 +114,24 @@ create table(:blabla) do
 end
 ```
 ---------------------------------------------------
+`Ecto.Migration.add/3` takes a column name, its type and arbitrary number of
+options as list yet you don't see them supplied as lists. Why?
+
+For example:
+```elixir
+  add :contact_id, references(:contacts, [type: :binary_id]),
+    null: false,
+    on_delete: :delete_all
+```
+
+The reason:
+```elixir
+iex(1)> defmodule ArgTest do
+...(1)>   def rest(first, second, rest), do: rest
+...(1)> end
+iex(2)
+iex(3)> ArgTest.rest(:lofa, 27, option1: :a, another: :b)
+
+#=> [option1: :a, another: :b]
+```
+---------------------------------------------------
