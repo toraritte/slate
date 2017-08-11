@@ -1,7 +1,5 @@
 defmodule Slate.Entities.Contact do
   use Slate.Schema
-  import Ecto.Changeset
-  alias Slate.Entities.Contact
 
   schema "contacts" do
     field :surnames, :string
@@ -19,3 +17,9 @@ defmodule Slate.Entities.Contact do
     |> validate_required(@required_fields)
   end
 end
+
+# test in IEx
+# TODO: learn to write proper tests already...
+#
+# alias Slate.Entities.Contact
+# Contact.changeset(%Contact{}, %{surnames: "lofa"})

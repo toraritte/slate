@@ -103,3 +103,14 @@ iex(13)> defmodule ImportHere do
     iex:17: (module)
 ```
 ---------------------------------------------------
+[Can foreign key references contain NULL values in PostgreSQL?](https://stackoverflow.com/questions/28206232/can-foreign-key-references-contain-null-values-in-postgresql)
+
+Yes. So if this is not desirable do
+```elixir
+create table(:blabla) do
+  # The :binary_id is needed if the referenced table
+  # has UUID as primary key
+  add :contact_id, references(:contacts, [type: :binary_id]), null: false
+end
+```
+---------------------------------------------------

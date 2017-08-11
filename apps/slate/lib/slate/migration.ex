@@ -26,11 +26,16 @@ defmodule Slate.Migration do
     end
   end
 
+  # TODO create general macro to automatically create `references` with binary_id
+  #      see phone_number migration
+
   defmacro __using__(_) do
     quote location: :keep do
       use Ecto.Migration
 
-      # Import is not strictly needed
+      # Import is not strictly needed but it is convenient so that the
+      # `create_table_with_binary_id_as_primary_key/2` macro does not
+      # need to be called explicitly from every migration file.
       import Slate.Migration
     end
   end
