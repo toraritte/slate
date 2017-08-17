@@ -114,6 +114,8 @@ create table(:blabla) do
 end
 ```
 ---------------------------------------------------
+[Beautiful SO answer on how to define foreign keys in PostgreSQL.](https://stackoverflow.com/questions/28558920/postgresql-foreign-key-syntax)
+---------------------------------------------------
 `Ecto.Migration.add/3` takes a column name, its type and arbitrary number of
 options as list yet you don't see them supplied as lists. Why?
 
@@ -134,4 +136,70 @@ iex(3)> ArgTest.rest(:lofa, 27, option1: :a, another: :b)
 
 #=> [option1: :a, another: :b]
 ```
+---------------------------------------------------
+POSTGRES: How restrict ONE distinct value (e.g., `true`) for EACH entity in a table?
+
+          For example, ADDRESSES table to CONTACTS where each contact has only 1
+                       primary address, denoted by a boolean column that defaults
+                       to `false`.
+
+  (1) As an exotic solution you could add a `TrueRow` table such as
+      PRIMARY_ADDRESSES outlined here:
+      https://stackoverflow.com/questions/3228161/could-i-make-a-column-in-a-table-only-allows-one-true-value-and-all-other-rows¬
+
+  (2) But why would you do it if you can resolve this conundrum with a
+      partial constraint. Took this idea from
+      https://dba.stackexchange.com/questions/4815/how-to-implement-a-default-flag-that-can-only-be-set-on-a-single-row
+      https://stackoverflow.com/questions/28166915/postgresql-constraint-only-one-row-can-have-flag-set
+
+      An example that worked in [SQL Fiddle](http://sqlfiddle.com/#!17/ac694/4):
+
+        Schema:
+        ```sql
+        CREATE TABLE contacts
+        (
+          id serial NOT NULL,
+          name text NOT NULL,
+          CONSTRAINT my_table_pkey PRIMARY KEY (id)
+        );
+
+        CREATE TABLE phone_numbers
+        (
+          id serial NOT NULL,
+          contact_id serial REFERENCES contacts(id),
+          phone_number varchar(16) NOT NULL,
+          is_preferred boolean DEFAULT false
+        );
+
+        CREATE UNIQUE INDEX ON phone_numbers (contact_id, is_preferred) 
+          WHERE is_preferred = true;
+
+        INSERT INTO contacts (name)
+          VALUES
+            ('lofa'),
+            ('balabab'),
+            ('vmi');
+
+        INSERT INTO phone_numbers (contact_id, phone_number)
+          VALUES
+            ((SELECT id FROM contacts WHERE name='lofa'),'123'),
+            ((SELECT id FROM contacts WHERE name='lofa'),'345'),
+            ((SELECT id FROM contacts WHERE name='lofa'),'678');
+        ```
+
+        Adding conflicting entries:
+        ```sql
+        INSERT INTO phone_numbers (contact_id, phone_number, is_preferred)
+          VALUES
+            ((SELECT id FROM contacts WHERE name='lofa'),'777', true);
+
+        INSERT INTO phone_numbers (contact_id, phone_number, is_preferred)
+          VALUES
+            ((SELECT id FROM contacts WHERE name='lofa'),'999', true);
+
+        select * from phone_numbers;
+
+        -- results in:
+        -- ERROR: duplicate key value violates unique constraint "phone_numbers_contact_id_is_preferred_idx" Detail: Key (contact_id, is_preferred)=(1, t) already exists
+        ```
 ---------------------------------------------------

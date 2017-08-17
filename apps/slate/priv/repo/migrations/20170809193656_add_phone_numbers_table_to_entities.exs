@@ -19,7 +19,7 @@ defmodule Slate.Repo.Migrations.AddPhoneNumbersTableToEntities do
 
       add :entity_id,
           references(:entities, [type: :binary_id]),
-          null: false,
+          null:      false,
           # TODO test ON DELETE somehow because it does not show with
           #      `\d+ phone_numbers` in `psql`
           on_delete: :delete_all,
@@ -31,13 +31,15 @@ defmodule Slate.Repo.Migrations.AddPhoneNumbersTableToEntities do
       #
       #      https://dba.stackexchange.com/questions/164796/how-do-i-store-phone-numbers-in-postgresql
       #
-      # Leaving it as `text` for now and just normalize input to US phone
-      # numbers. E.g., (555) 657-1234 -> "15556571234"
-      add :phone_number, :text, null: false,
-          comment: "Phone number in the format of \"9168897510\" as text"
+      # Leaving it as `varchar` for now and just normalize input to US phone
+      # numbers in internation format. E.g., (555) 657-1234 -> "15556571234"
+      add :phone_number, :varchar, size: 16, null: false,
+          comment: "Phone number in the format of \"19168897510\""
 
-      add :preferred, :boolean, null: false,
-          comment: "Preferred phone number (ECTO default: FALSE)"
+      add :extension,    :varchar, size: 16, null: false
+
+      add :is_preferred, :boolean, default: false, null: false,
+          comment: "Preferred phone number"
 
       add :type, :phone_type,
         comment: "Type of device associated with the phone number. " <>
@@ -47,20 +49,27 @@ defmodule Slate.Repo.Migrations.AddPhoneNumbersTableToEntities do
     end
 
     execute "COMMENT ON TABLE phone_numbers IS "                             <>
-            "'(ENTITIES |---1:N--<| PHONE_NUMBERS) Phone numbers associated" <>
+            "'(ENTITIES |--<| PHONE_NUMBERS) Phone numbers associated" <>
             " with a specific entity'"
 
     create unique_index(
       :phone_numbers,
       [:entity_id, :phone_number],
-      comment: "UNIQUE constraint to ensure that ENTITIES don't have the "   <>
-               "same number multiple times")
+      comment: "Prevent duplicate phone numbers for EACH entity.")
+
+    create unique_index(
+      :phone_numbers,
+      [:entity_id, :is_preferred],
+      where:   "is_preferred = true",
+      comment: "Only ONE preferred phone number for EACH entity.")
 
     # TODO test this
     #      CAVEAT multiple entities with the same names are allowed
     #             so testing it with an "all" insert (entity + numbers)
     #             would result in the table below if a similar command
     #             is issued multiple times:
+
+    # NOTE: this should be normal behaviour because clients can have same names.
 
     # Entity.insert_phone_numbers(%Entity{}, %{surnames: "mas", given_names: "vmi", phone_numbers: [ %{phone_number: "9"}, %{phone_number: "7", type: "work"}]}) |> Repo.insert()
 

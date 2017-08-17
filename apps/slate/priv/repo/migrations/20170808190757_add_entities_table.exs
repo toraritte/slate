@@ -42,7 +42,11 @@ defmodule Slate.Repo.Migrations.AddEntitiesTable do
       add :id, :binary_id, primary_key: true, null: false,
           comment: "PK"
 
-      add :name, :text,
+      # TODO change type to jsonb and figure out the convention for
+      # different entities
+      add :name, :text, null: false,
+          # TODO this description is wrong but until this has been figured
+          #      out, it stays
           comment: "entity name, format depends on type. "      <>
                    "E.g., type: [:individual, :CORE, :client] " <>
                    "=> surnames: ..., :given_names: ..."
