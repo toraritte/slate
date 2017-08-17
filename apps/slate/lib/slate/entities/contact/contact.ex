@@ -7,6 +7,7 @@
 
 defmodule Slate.Entities.Contact do
   use Slate.Schema
+
   alias Slate.Entities.Contact.{PhoneNumber}
   alias Slate.Repo
 

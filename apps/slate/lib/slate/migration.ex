@@ -1,6 +1,6 @@
 defmodule Slate.Migration do
   @moduledoc ~S"""
-  using to keep extra SLATE-related migration commands.
+  Using to keep extra SLATE-related migration commands.
   """
 
   alias Ecto.Migration.{Table,Runner}
@@ -10,7 +10,7 @@ defmodule Slate.Migration do
   every single time when creating a new table and set by adding an `id` field.
 
   Not very sophisticated but works: basically just copied the commands from
-  `Ecto.Migration.create/2` macro. (Don't expect any further customizations).
+  `Ecto.Migration.create/2` macro.
   """
   defmacro create_table_with_binary_id_as_primary_key(table_name, do: block) do
     quote do

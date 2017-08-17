@@ -1,6 +1,6 @@
 defmodule Slate.Schema do
   @moduledoc ~S"""
-  setting up `:binary_id` as default for any new schema. We'll see whether
+  Setting up `:binary_id` as default for any new schema. We'll see whether
   using UUIDs a good idea after all.
   """
   defmacro __using__(opts) do
@@ -11,7 +11,7 @@ defmodule Slate.Schema do
 
       # TODO revisit the idea of importing a "context"
       #      (i.e., a normalized table with all its
-      #       subschemas)
+      #       subtables)
       #      Example:
       #      `use Slate.Schema, context: Contact` and it
       #      would import Contact.PhoneNumber, Contact.Address etc.
