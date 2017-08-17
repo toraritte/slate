@@ -1,6 +1,6 @@
-defmodule Slate.Entities.Contact.PhoneNumber do
+defmodule Slate.Contacts.Entity.PhoneNumber do
   use Slate.Schema
-  alias Slate.Entities.Contact
+  alias Slate.Contacts.Entity
 
   schema "phone_numbers" do
     field :phone_number
@@ -14,7 +14,7 @@ defmodule Slate.Entities.Contact.PhoneNumber do
     #
     # https://stackoverflow.com/questions/35245859/how-to-use-postgres-enumerated-type-with-ecto
     field :type
-    belongs_to :contact, Contact
+    belongs_to :entity, Entity
   end
 
   @required_fields [:phone_number]
