@@ -18,11 +18,8 @@ defmodule Slate.Repo.Migrations.AddPhoneNumbersTableToEntities do
           comment: "PK"
 
       add :entity_id,
-          references(:entities, [type: :binary_id]),
+          references(:entities, [type: :binary_id, on_delete: :delete_all,]),
           null:      false,
-          # TODO test ON DELETE somehow because it does not show with
-          #      `\d+ phone_numbers` in `psql`
-          on_delete: :delete_all,
           comment:   "FK to ENTITIES table"
 
       # TODO Explore `pg_libphonenumber` below. Leaving as `text` for now.

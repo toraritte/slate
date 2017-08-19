@@ -42,7 +42,7 @@ defmodule Slate.Repo.Migrations.AddAddressesToEntities do
       #      nullable. Test it.
       #      https://stackoverflow.com/questions/23325838
       add :address_types_id,
-          references(:address_types, [type: :binary_id, on_delete: :nothing]),
+          references(:address_types, [type: :binary_id, on_delete: :nilify_all]),
           comment: "Associate an address type with the address. (May be NULL.)"
 
           # TODO add living_status (formerly living_arrangements) and figure out
