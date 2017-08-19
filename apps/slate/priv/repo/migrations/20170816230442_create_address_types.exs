@@ -1,4 +1,4 @@
-defmodule Slate.Repo.Migrations.AddAddressTypesToMigration do
+defmodule Slate.Repo.Migrations.CreateAddressTypes do
   use Ecto.Migration
 
   def change do
@@ -29,15 +29,12 @@ defmodule Slate.Repo.Migrations.AddAddressTypesToMigration do
     #          people sometimes move in with their relatives in a county where
     #          we do, and they give that address. So how could this be done
     #          efficiently?
+    # NOTE: This has been figured out but comment remains for historical
+    #       reasons until I get to writing the documentation.
     create table(:address_types, primary_key: false) do
 
-      # TODO This would be a good place to use natural PKs, right?
-      # NOTE: probably only when this would be 1:1 but recent news above
-      #           don't point that way.
-      #       AND
-      #       there is also that: https://stackoverflow.com/questions/590442/
-      #
-      #       Let's just leave the surrogate keys for now..
+      # TODO Relationship is one_to_one but avoiding natural keys for now.
+      #      See https://stackoverflow.com/questions/590442/ for more.
       add :id, :binary_id, primary_key: true, null: false,
           comment: "PK"
 

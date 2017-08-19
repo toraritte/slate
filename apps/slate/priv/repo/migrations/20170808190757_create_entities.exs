@@ -1,4 +1,4 @@
-defmodule Slate.Repo.Migrations.AddEntitiesTable do
+defmodule Slate.Repo.Migrations.CreateEntities do
   use Ecto.Migration
 
   def change do

@@ -1,4 +1,4 @@
-defmodule Slate.Repo.Migrations.AddPhoneNumbersTableToEntities do
+defmodule Slate.Repo.Migrations.CreateEntityPhoneNumbers do
   use Ecto.Migration
 
   def up do
