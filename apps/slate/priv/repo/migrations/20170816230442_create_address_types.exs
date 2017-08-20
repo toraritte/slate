@@ -40,7 +40,7 @@ defmodule Slate.Repo.Migrations.CreateAddressTypes do
 
       # TODO seed this (https://hexdocs.pm/phoenix/seeding_data.html)
       add :type, :text, null: false,
-          comment: "Current choices: "            <>
+          comment: "Initial choices: "            <>
                        "assisted living center, " <>
                        "commercial, "             <>
                        "private residential, "    <>
